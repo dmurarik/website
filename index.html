@@ -1,40 +1,119 @@
-<div style="background-image: linear-gradient(45deg, #0a274d, #1a4f63);">
-  <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    display: flex; align-items: center; justify-content: center;
-    background-attachment: fixed;">
-    <div style="text-align: center; color: #fff; font-family: monospace;">
-      <p style="text-shadow: 2px 3px 4px rgba(10, 27, 69, 0.5);">
-        WELCOME TO DARRAN'S CODEPage
-      </p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Code Unveiled</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00FF41;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: -1;
+        }
+
+        .code {
+            position: relative;
+            font-size: 18px;
+            line-height: 1.5;
+            white-space: pre;
+            background: rgba(0, 0, 0, 0.7); /* Darker background for better readability */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00FF41;
+        }
+
+        .glitch {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            color: #00FF41;
+            opacity: 0.8;
+            animation: glitch 4s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(2px, -2px); }
+            50% { transform: translate(-3px, 3px); }
+            100% { transform: translate(0, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix"></div>
+
+    <div class="code">
+        Wake up...<br>
+        The Matrix has you...<br>
+        Follow the white rabbit.<br>
+        Knock, knock.<br>
+        <br>
+        <div class="glitch">▉▉▉ SYSTEM ERROR ▉▉▉</div>
     </div>
-    <div style="margin-left: 80px; display: flex; gap: 15px;
-      align-items: center; padding-left: 20px;">
-      <a href="#" style="color: #fff; font-family: monospace; text-transform: uppercase;
-        letter-spacing: -2px; font-size: 24px;">GitHub</a>
-      <div style="font-size: 18px; color: #f3f3f3;">
-        🧩 Algorithmic Thinking
-      </div>
-      <div style="color: #ff4444; font-size: 16px;">
-        💻 Technology Enthusiast
-      </div>
-    </div>
-    <div style="margin-left: -80px;">CODE</div>
-  </div>
-</div>
 
-<style>
-* {
-  margin: 0;
-  padding: 0;
-}
+    <script>
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        document.querySelector('.matrix').appendChild(canvas);
 
-body {
-  font-family: monospace;
-  display: flex;
-}
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-header {
-  position: fixed;
-  top: 100%;
-}
-</style>
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const columns = canvas.width / 20;
+        const drops = Array.from({ length: columns }).fill(1);
+
+        const hiddenData = [
+            { position: 15, value: '01000100' }, 
+            { position: 28, value: '52 45 4E 52 41 44' }, 
+            { position: 42, value: '4D 75 72 61 72 69 6B' },
+            { position: 57, value: '4B 49 4D 55 52 41 52' }, 
+            { position: 72, value: '44 61 72 72 65 6E 20 4D 75 72 61 72 69 6B' } 
+        ];
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00FF41';
+            ctx.font = '18px Courier New';
+
+            drops.forEach((y, index) => {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                ctx.fillText(text, index * 20, y * 20);
+
+            
+                const hiddenClue = hiddenData.find(clue => clue.position === index);
+                if (hiddenClue) {
+                    ctx.fillText(hiddenClue.value, index * 20, y * 20);
+                }
+
+                if (y * 20 > canvas.height && Math.random() > 0.975) {
+                    drops[index] = 0;
+                }
+                drops[index]++;
+            });
+
+            setTimeout(() => requestAnimationFrame(draw), 100); 
+        }
+
+        draw();
+    </script>
+</body>
+</html>
